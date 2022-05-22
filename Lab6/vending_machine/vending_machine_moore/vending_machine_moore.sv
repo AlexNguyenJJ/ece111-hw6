@@ -11,14 +11,74 @@ module vending_machine_moore(
  // Sequential Logic for present state
  always_ff@(posedge clk) begin
    // Student to Add Code
-   
+  // Manual reset option
+  present_state <= next_state;
  end
 
  // Combination Logic for Next State and Output
  always_comb begin 
-
   // Student to Add Code
-
+  case (present_state)
+    CENTS_0: begin
+      open = 0;
+      if ((!N && !D) || !rstn) begin
+        next_state = CENTS_0;
+      end
+      else if (N && !D) begin
+        next_state = CENTS_5;
+      end
+      else if (!N && D) begin
+        next_state = CENTS_10;
+      end
+      else begin
+        next_state = CENTS_15;
+      end
+    end
+    CENTS_5: begin
+      open = 0;
+      if (!N && !D) begin
+        next_state = CENTS_5;
+      end
+      else if (N && !D) begin
+        next_state = CENTS_10;
+      end
+      else if (!N && D) begin
+        next_state = CENTS_15;
+      end
+      else begin
+        next_state = CENTS_15;
+      end
+      if (!rstn)
+        next_state = CENTS_0;
+    end
+    CENTS_10: begin
+      open = 0;
+      if (!N && !D) begin
+        next_state = CENTS_10;
+      end
+      else if (N && !D) begin
+        next_state = CENTS_15;
+      end
+      else if (!N && D) begin
+        next_state = CENTS_15;
+      end
+      else begin
+        next_state = CENTS_15;
+      end
+      if (!rstn)
+        next_state = CENTS_0;
+    end
+    CENTS_15: begin
+      open = 1;
+      next_state = CENTS_15;
+      if (!rstn)
+        next_state = CENTS_0;
+    end 
+    default: begin
+      open = 0;
+      next_state = CENTS_0;
+    end
+  endcase
  end
 endmodule: vending_machine_moore
 
