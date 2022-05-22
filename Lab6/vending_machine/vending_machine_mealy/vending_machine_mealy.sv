@@ -19,11 +19,17 @@ module vending_machine_mealy(
   if(!rstn) begin
 
     // Student to Add Code 
+    present_state <= CENTS_0;
+    r_N <= 0;
+    r_D <= 0;
 
   end 
   else begin
 
     // Student to Add Code 
+    present_state <= next_state;
+    r_N <= N;
+    r_D <= D;
 
   end
  end
@@ -33,6 +39,63 @@ module vending_machine_mealy(
  always_comb begin 
 
   // Student to Add Code
+  case (present_state)
+    CENTS_0: begin
+      open = 0;
+      if (!r_N && !r_D) begin
+        next_state = CENTS_0;
+      end
+      else if (r_N && !r_D) begin
+        next_state = CENTS_5;
+      end
+      else if (!r_N && r_D) begin
+        next_state = CENTS_10;
+      end
+      else begin
+        next_state = CENTS_15;
+        open = 1;
+      end
+    end
+    CENTS_5: begin
+      open = 0;
+      if (!r_N && !r_D) begin
+        next_state = CENTS_5;
+      end
+      else if (r_N && !r_D) begin
+        next_state = CENTS_10;
+      end
+      else if (!r_N && r_D) begin
+        next_state = CENTS_15;
+        open = 1;
+      end
+      else begin
+        next_state = CENTS_15;
+        open = 1;
+      end
+    end
+    CENTS_10: begin
+      open = 0;
+      if (!r_N && !r_D) begin
+        next_state = CENTS_10;
+      end
+      else if (r_N && !r_D) begin
+        next_state = CENTS_15;
+        open = 1;
+      end
+      else if (!r_N && r_D) begin
+        next_state = CENTS_15;
+        open = 1;
+      end
+      else begin
+        next_state = CENTS_15;
+        open = 1;
+      end
+    end
+    default: begin
+      open = 0;
+      next_state = CENTS_0;
+    end
+  endcase
 
  end
 endmodule: vending_machine_mealy
